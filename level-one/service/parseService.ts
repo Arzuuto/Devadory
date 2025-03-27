@@ -1,12 +1,12 @@
 import Parse from 'parse'
 import { Project } from '@/interface/project';
-// Initialize Parse SDK
 
+// Initialize Parse SDK
 Parse.initialize(
-  process.env.PARSE_APPLICATION_ID!,
-  process.env.PARSE_JAVASCRIPT_KEY!
+  process.env.NEXT_PUBLIC_PARSE_APPLICATION_ID!,
+  process.env.NEXT_PUBLIC_PARSE_JAVASCRIPT_KEY!
 )
-Parse.serverURL = process.env.PARSE_HOST_URL!
+Parse.serverURL = process.env.NEXT_PUBLIC_PARSE_HOST_URL!
 
 // Sign-in function
 export async function signIn(username: string, password: string) {
@@ -123,7 +123,7 @@ export async function updateProject(updatedProject: Project) {
   const query = new Parse.Query(Project)
   
   try {
-    const project = await query.get(updatedProject.id as string)
+    const project = await query.get(updatedProject.id)
     project.set('name', updatedProject.name)
     project.set('description', updatedProject.description)
     project.set('dueDate', updatedProject.dueDate)
