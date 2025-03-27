@@ -26,18 +26,18 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Features added
 
-Mise à jour de la classe Project
-Ajouter: teamMembers (Relation vers User)
+Mise à jour de la classe Project  
+Ajouter: teamMembers (Relation vers User)  
 
-Gestion des membres d'équipe
-Ajout de membres à un projet (via email ou nom d'utilisateur)
-Liste des membres d'un projet
-Suppression d'un membre d'un projet
+Gestion des membres d'équipe  
+Ajout de membres à un projet (via email ou nom d'utilisateur)  
+Liste des membres d'un projet  
+Suppression d'un membre d'un projet  
 
-Amélioration de l'interface utilisateur
-Ajouter des états de chargement et la gestion des erreurs
-Optimiser la navigation entre les différentes pages
-Routes supplémentaires
-/projects/[id]/members - Gestion des membres d'un projet
+Amélioration de l'interface utilisateur  
+Ajouter des états de chargement et la gestion des erreurs  
+Optimiser la navigation entre les différentes pages  
+Routes supplémentaires  
+/projects/[id]/members - Gestion des membres d'un projet  
 
 ![member page](image-1.png)
