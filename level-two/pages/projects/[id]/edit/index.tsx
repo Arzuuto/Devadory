@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { getProjectById, updateProject } from '@/service/parseService'
+import { getCurrentUser, getProjectById, updateProject } from '@/service/parseService'
 import { Project } from '@/interface/project'
 
 export default function EditProjectPage() {
@@ -17,6 +17,15 @@ export default function EditProjectPage() {
   useEffect(() => {
     if (!id) return
 
+    async function checkUser() {
+      const currentUser = await getCurrentUser();
+      if (!currentUser) {
+        router.replace('/login') // Redirect to login if no user
+      } else {
+        setLoading(false) // Allow rendering if user is authenticated
+      }
+    }
+
     async function fetchProject() {
       try {
         const data = await getProjectById(id as string)
@@ -29,7 +38,7 @@ export default function EditProjectPage() {
         setError('Failed to fetch project.')
       }
     }
-
+    checkUser()
     fetchProject()
   }, [id])
 
