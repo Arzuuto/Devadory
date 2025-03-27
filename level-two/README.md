@@ -24,28 +24,20 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Features
-Fonctionnalités d'authentification  
-Page d'inscription  
-Page de connexion  
-Déconnexion  
+## Features added
 
-Gestion des projets (CRUD)  
-Liste des projets (pour l'utilisateur connecté)  
-Création d'un nouveau projet  
-Page de détail d'un projet avec ses informations  
-Modification d'un projet  
-Suppression d'un projet  
-Routes à implémenter  
+Mise à jour de la classe Project
+Ajouter: teamMembers (Relation vers User)
 
-/ - Page d'accueil/dashboard des projets  
-/login - Connexion  
-/register - Inscription  
-/projects - Liste des projets  
-/projects/new - Création d'un projet  
-/projects/[id] - Détails d'un projet  
-/projects/[id]/edit - Modification d'un projet  
+Gestion des membres d'équipe
+Ajout de membres à un projet (via email ou nom d'utilisateur)
+Liste des membres d'un projet
+Suppression d'un membre d'un projet
 
+Amélioration de l'interface utilisateur
+Ajouter des états de chargement et la gestion des erreurs
+Optimiser la navigation entre les différentes pages
+Routes supplémentaires
+/projects/[id]/members - Gestion des membres d'un projet
 
-open image.png if it doesnt display  
-![alt text](image.png)
+![member page](image-1.png)
