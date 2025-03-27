@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { getProjects } from '@/service/parseService'
-import { Project } from '@/interface/project'
+import { getCurrentUser, getProjects } from '@/service/parseService'
+
+interface Project {
+  id: string | undefined,
+  name: string,
+  status: string
+}
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([])
@@ -10,6 +15,16 @@ export default function ProjectsPage() {
   const router = useRouter()
 
   useEffect(() => {
+
+    async function checkUser() {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      router.replace('/login') // Redirect to login if no user
+      } else {
+        setLoading(false) // Allow rendering if user is authenticated
+      }
+    }
+
     async function fetchProjects() {
       try {
         const data = await getProjects()
@@ -21,14 +36,18 @@ export default function ProjectsPage() {
       }
     }
 
+    checkUser()
     fetchProjects()
   }, [])
 
   const handleCreateProject = () => {
     router.push('/projects/new')
   }
-
-  if (loading) return <div>Loading...</div>
+  if (loading) return <div className="flex justify-center">
+    <h1 className="pt-10">
+      Loading...
+    </h1>
+    </div>;
   if (error) return <div>{error}</div>
 
   return (
@@ -42,7 +61,7 @@ export default function ProjectsPage() {
             {projects.map((project) => (
               <li key={project.id} className="border-b border-black-100 pb-4 text-black">
                 <h3 className="font-semibold text-xl">{project.name}</h3>
-                <p><strong>Due date:</strong> {project.dueDate}</p>
+                <p><strong>status: </strong> {project.status}</p>
                 <button
                   onClick={() => router.push(`/projects/${project.id}`)}
                   className="mt-4 px-8 py-2 bg-blue-500 text-white rounded-lg"
