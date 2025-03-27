@@ -12,7 +12,7 @@ export default function Navbar() {
         setIsAuthenticated(!!currentUser)  // Sets to true if user exists
     }
     fetchUser()
-  }, [])
+  }, [router.asPath])
 
   const handleNavigate = (path: string) => {
     router.push(path)
