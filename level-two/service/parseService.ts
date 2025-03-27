@@ -7,6 +7,7 @@ Parse.initialize(
   process.env.NEXT_PUBLIC_PARSE_JAVASCRIPT_KEY!
 )
 Parse.serverURL = process.env.NEXT_PUBLIC_PARSE_HOST_URL!
+Parse.masterKey = process.env.NEXT_PUBLIC_PARSE_MASTER_KEY
 
 // Sign-in function
 export async function signIn(username: string, password: string) {
@@ -14,7 +15,6 @@ export async function signIn(username: string, password: string) {
     const user = await Parse.User.logIn(username, password)
     return user;
   } catch (error) {
-    console.error('Login error:', error)
     throw error;
   }
 }
@@ -30,12 +30,10 @@ export async function signUp(username: string, email: string, password: string) 
     await user.signUp()
     return user
   } catch (error) {
-    console.error('Sign-up error:', error)
     throw error;
   }
 }
 
-// Logout function
 export async function logout() {
   try {
     await Parse.User.logOut()
@@ -46,19 +44,26 @@ export async function logout() {
   }
 }
 
-// Get current user
 export function getCurrentUser() {
   return Parse.User.current()
 }
 
 export async function createProject(name: string, description: string, dueDate: string, status: string) {
   const newProject = new Parse.Object('Project');
-  
+  const user = Parse.User.current();
+
+  if (!user) {
+    throw new Error("No current user found")
+  }
+
   newProject.set("name", name);
   newProject.set("description", name);
   newProject.set("dueDate", dueDate);
   newProject.set("status", status);
-  newProject.set("owner", Parse.User.current());
+  newProject.set("owner", user);
+
+  const relation = newProject.relation("teamMember")
+  relation.add(user);
   
   try {
     const result = await newProject.save();
@@ -68,25 +73,28 @@ export async function createProject(name: string, description: string, dueDate: 
   }
 }
 
-
 export async function getProjects() {
   const Project = Parse.Object.extend('Project')
-  const query = new Parse.Query(Project)
-  const currentUser = Parse.User.current()
 
   try {
-    const results = await query.find()
+    const currentUser = Parse.User.current()
+    if (!currentUser) throw new Error('User not logged in.')
+
+    const userQuery = new Parse.Query(Project)
+    userQuery.equalTo('teamMembers', currentUser)
+
+    const results = await userQuery.find()
+
     return results.map((project) => ({
       id: project.id,
       name: project.get('name'),
-      description: project.get('description'),
-      dueDate: project.get('dueDate'),
       status: project.get('status'),
     }))
   } catch (error) {
-    throw error;
+    throw error
   }
 }
+
 
 export async function getProjectById(projectId: string) {
   const Project = Parse.Object.extend('Project')
@@ -100,6 +108,7 @@ export async function getProjectById(projectId: string) {
       description: project.get('description'),
       dueDate: project.get('dueDate'),
       status: project.get('status'),
+      members: project.get('members')
     }
   } catch (error) {
     throw error;
@@ -112,7 +121,7 @@ export async function deleteProject(projectId: string) {
 
   try {
     const project = await query.get(projectId)
-    await project.destroy() // Supprimer le projet
+    await project.destroy()
   } catch (error) {
     throw error;
   }
@@ -123,7 +132,7 @@ export async function updateProject(updatedProject: Project) {
   const query = new Parse.Query(Project)
   
   try {
-    const project = await query.get(updatedProject.id)
+    const project = await query.get(updatedProject.id as string)
     project.set('name', updatedProject.name)
     project.set('description', updatedProject.description)
     project.set('dueDate', updatedProject.dueDate)
