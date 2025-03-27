@@ -17,9 +17,9 @@ export default function ProjectsPage() {
   useEffect(() => {
 
     async function checkUser() {
-    const currentUser = await getCurrentUser();
-    if (!currentUser) {
-      router.replace('/login') // Redirect to login if no user
+      const currentUser = await getCurrentUser();
+      if (!currentUser) {
+        router.replace('/login') // Redirect to login if no user
       } else {
         setLoading(false) // Allow rendering if user is authenticated
       }

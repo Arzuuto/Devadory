@@ -35,7 +35,7 @@ export default function ProjectDetailPage() {
         const query = new Parse.Query(Project)
         const projectObject = await query.get(id as string)
         
-        const relation = projectObject.relation("teamMember")
+        const relation = projectObject.relation("teamMembers")
         const membersList = await relation.query().find({ useMasterKey: true })
         setMembers(membersList as unknown as Parse.User[])
       } catch (err) {
